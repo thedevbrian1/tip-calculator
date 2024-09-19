@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="./output.css" rel="stylesheet" />
+    <title>Tip calculator</title>
+  </head>
+  <body>
+    <main
+      class="max-w-4xl mx-auto grid grid-cols-2 gap-8 border border-gray-400 mt-32 p-8 rounded-md shadow-md"
+    >
+      <form method="post">
+        <label>
+          Bill amount
+          <input
+            type="number"
+            id="bill-amount"
+            name="bill"
+            class="bg-[#f3f8fb] px-4 py-2 rounded-md block mt-2 w-full focus:border-none focus:outline-none focus:ring focus:ring-brand-light-blue"
+          />
+        </label>
+        <p class="mt-4">Select tip %</p>
+        <div class="mt-4 grid grid-cols-3 gap-4">
+          <label
+            class="border border-black bg-brand-green has-[:checked]:bg-brand-light-blue p-5 rounded-md text-white grid place-items-center"
+          >
+            5%
+            <input
+              type="radio"
+              name="tip"
+              value="5"
+              class="checked:bg-brand-light-blue"
+            />
+          </label>
+          <label
+            class="border border-black bg-brand-green p-5 rounded-md text-white grid place-items-center"
+          >
+            10%
+            <input type="radio" name="tip" value="10" />
+          </label>
+          <label
+            class="border border-black bg-brand-green p-5 rounded-md text-white grid place-items-center"
+          >
+            15%
+            <input type="radio" name="tip" value="15" />
+          </label>
+          <label
+            class="border border-black bg-brand-green p-5 rounded-md text-white grid place-items-center"
+          >
+            25%
+            <input type="radio" name="tip" value="25" />
+          </label>
+          <label
+            class="border border-black bg-brand-green p-5 rounded-md text-white grid place-items-center"
+          >
+            50%
+            <input type="radio" name="tip" value="50" />
+          </label>
+          <label
+            class="bg-[#f6fdf8] p-5 rounded-md text-[#5d7776] font-semibold grid place-items-center"
+          >
+            Custom
+            <input type="radio" name="tip" value="" class="appearance-none" />
+          </label>
+          <!-- 
+            When the custom input is clicked it should change from a radio input to a number input where one can enter the specific value
+          -->
+        </div>
+        <label class="mt-4 block text-brand-gray">
+          No of people
+          <input
+            id="no-of-people"
+            type="number"
+            name="no-of-people"
+            class="bg-[#f3f8fb] px-4 py-2 rounded-md block mt-2 w-full focus:border-none focus:outline-none focus:ring focus:ring-brand-light-blue"
+          />
+        </label>
+
+        <button
+          type="submit"
+          class="mt-4 bg-brand-light-blue px-4 py-2 rounded-md w-full"
+        >
+          Calculate amount
+        </button>
+      </form>
+      <div
+        class="w-full h-full bg-brand-green rounded-2xl p-8 text-white flex flex-col justify-between"
+      >
+        <div>
+          <div class="flex justify-between items-center">
+            <p class="text-lg">
+              Tip amount <span class="block text-brand-gray">/ person</span>
+            </p>
+            <p
+              id="tip-amount-value"
+              class="text-3xl font-semibold text-[#2cbba9]"
+            >
+              $0.00
+            </p>
+          </div>
+          <div class="flex justify-between items-center mt-4">
+            <p class="text-lg">
+              Total <span class="block text-brand-gray">/ person</span>
+            </p>
+            <p
+              id="total-amount-value"
+              class="text-3xl font-semibold text-[#2cbba9]"
+            >
+              $0.00
+            </p>
+          </div>
+          <div class="flex justify-between items-center mt-4">
+            <p class="text-xl font-bold">Total</p>
+            <p
+              id="general-total-amount"
+              class="text-3xl font-semibold text-[#2cbba9]"
+            >
+              $0.00
+            </p>
+          </div>
+        </div>
+        <button
+          id="reset"
+          class="bg-brand-light-blue w-full py-2 rounded-md text-gray-800 uppercase font-bold"
+        >
+          Reset
+        </button>
+      </div>
+    </main>
+
+    <script>
+      let form = document.querySelector("form");
+      form.addEventListener("submit", handleSubmit);
+
+      let resetBtn = document.getElementById("reset");
+      resetBtn.addEventListener("click", handleClick);
+
+      function handleClick(event) {
+        let tipAmountValue = document.getElementById("tip-amount-value");
+        let totalAmountValue = document.getElementById("total-amount-value");
+        let generalTotalAmount = document.getElementById(
+          "general-total-amount"
+        );
+
+        tipAmountValue.textContent = "$0.0";
+        totalAmountValue.textContent = "$0.0";
+        generalTotalAmount.textContent = "$0.0";
+
+        form.reset();
+      }
+
+      function handleSubmit(event) {
+        event.preventDefault();
+        console.log("Submitted");
+
+        let noOfPeopleInput = document.getElementById("no-of-people");
+        let billAmountInput = document.getElementById("bill-amount");
+        let tipInput = document.querySelector("input[type=radio]:checked");
+        console.log({ tipInput });
+
+        let tipAmountValue = document.getElementById("tip-amount-value");
+        let totalAmountValue = document.getElementById("total-amount-value");
+        let generalTotalAmount = document.getElementById(
+          "general-total-amount"
+        );
+
+        let billAmount = billAmountInput.value;
+        let noOfPeople = noOfPeopleInput.value;
+        let tipPercentage = tipInput.value;
+
+        console.log({ billAmount });
+        console.log({ noOfPeople });
+
+        let tipAmount = Number(billAmount) * (Number(tipPercentage) / 100);
+        let totalAmount = Math.ceil(Number(billAmount) + Number(tipAmount));
+
+        console.log({ tipAmount });
+        console.log({ totalAmount });
+
+        let tipPerPerson = Math.ceil(tipAmount / noOfPeople);
+        let totalPerPerson = Math.ceil(totalAmount / noOfPeople);
+
+        tipAmountValue.textContent = `$${tipPerPerson}`;
+        totalAmountValue.textContent = `$${totalPerPerson}`;
+        generalTotalAmount.textContent = `$${totalAmount}`;
+      }
+    </script>
+  </body>
+</html>
